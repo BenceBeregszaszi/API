@@ -1,0 +1,11 @@
+{
+  "inputs": [
+    {
+      "inputFile": "../common/common-schema.yaml"
+    },
+    {
+      "inputFile": "../project/project-api.yaml"
+    }
+  ],
+  "output": "../gen/project-api.yaml"
+}

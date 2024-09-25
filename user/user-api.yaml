@@ -1,0 +1,131 @@
+openapi: '3.0.0'
+info:
+  title: Users
+  version: '1.0'
+
+tags:
+  - name: Users Management
+
+paths:
+  /users:
+    get:
+      operationId: getUsers
+      parameters:
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+        - in: query
+          name: projectIds
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+    post:
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflicts'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /users/{userId}:
+    put:
+      operationId: updateCustomer
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+    delete:
+      operationId: deleteCustomer
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '204':
+          description: Successful Operation
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  schemas:
+
+    UsersResponse:
+      type: object
+      required:
+        - users
+        - remaining
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        remaining:
+          type: integer
+
+    User:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+        age:
+          type: integer
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+        projectIds:
+          type: array
+          items:
+            type: string
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+        documentType:
+          $ref: '#/components/schemas/DocumentType'
+
+    DocumentType:
+      type: string
+      enum:
+        - CONTRACT
+        - IDENTIFICATIONS
